@@ -8,7 +8,32 @@ function App() {
   const [projects, setProjects] = React.useState({
     selectedProjectId: undefined,
     projects: [],
+    tasks: [],
   });
+
+  function handleAddTask(text) {
+    setProjects((prev) => {
+      const taskId = Math.random();
+      const newTask = {
+        id: taskId,
+        projectId: prev.selectedProjectId,
+        text: text,
+      };
+
+      return {
+        ...prev,
+        tasks: [...prev.tasks, newTask],
+      };
+    });
+  }
+  function handleDeleteTask(id) {
+    setProjects((prev) => {
+      return {
+        ...prev,
+        tasks: prev.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
 
   function handleSelectProject(id) {
     setProjects((prev) => {
@@ -73,6 +98,9 @@ function App() {
     <SelectedProject
       project={selectedProject}
       onDeleteProject={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      tasks={projects.tasks}
     />
   );
 
@@ -91,6 +119,7 @@ function App() {
           onStartNewProject={handleStartNewProject}
           projects={projects.projects}
           onSelectProject={handleSelectProject}
+          selectedProjectId={projects.selectedProjectId}
         />
         {content}
       </main>
