@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "./components/Sidebar";
 import NewProject from "./components/NewProject";
 import NoProjectSelected from "./components/NoProjectSelected";
+import SelectedProject from "./components/SelectedProject";
 
 function App() {
   const [projects, setProjects] = React.useState({
@@ -13,7 +14,19 @@ function App() {
     setProjects((prev) => {
       return {
         ...prev,
-        selectedProjectId: null,
+        selectedProjectId: id,
+      };
+    });
+  }
+
+  function handleDeleteProject() {
+    setProjects((prev) => {
+      return {
+        ...prev,
+        projects: prev.projects.filter(
+          (project) => project.id !== prev.selectedProjectId
+        ),
+        selectedProjectId: undefined,
       };
     });
   }
@@ -52,9 +65,16 @@ function App() {
     });
   }
 
-  console.log(projects);
+  const selectedProject = projects.projects.find(
+    (project) => project.id === projects.selectedProjectId
+  );
 
-  let content;
+  let content = (
+    <SelectedProject
+      project={selectedProject}
+      onDeleteProject={handleDeleteProject}
+    />
+  );
 
   if (projects.selectedProjectId === null) {
     content = (
